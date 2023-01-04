@@ -19,7 +19,8 @@ const Tasks: FC = () => {
   };
 
   useEffect(() => {
-    streamTasks({
+    //unsubscribe help to cloth the strem and avoid memory "leaks"
+    const unsubscribe = streamTasks({
       next: (querySnapshot) => {
         const tasks = querySnapshot.docs.map((docSnapshot) =>
           mapDocToTask(docSnapshot)
@@ -28,7 +29,7 @@ const Tasks: FC = () => {
       },
       error: (error) => console.log(error),
     });
-    getTasks().then((tasks) => setTasks(tasks));
+    return unsubscribe;
   }, [setTasks]);
 
   return (
